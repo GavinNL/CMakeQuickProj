@@ -17,7 +17,7 @@
 
 #################################################################
 
-if [ "$(ls -a | wc -l)" != "1" ]
+if [ "$(ls | wc -l)" != "1" ]
 then
  notify-send "This folder is not empty. Can only initialize a project if this script file is the only file that exists."
  exit 1
