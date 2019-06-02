@@ -17,6 +17,13 @@
 
 #################################################################
 
+if [ "$(ls -a | wc -l)" != "1" ]
+then
+ notify-send "This folder is not empty. Can only initialize a project if this script file is the only file that exists."
+ exit 1
+fi
+mkdir -p test
+
 mkdir -p test src include include/mylib
 
 CATCH_HEADER_URL="https://raw.githubusercontent.com/catchorg/Catch2/master/single_include/catch2/catch.hpp"
