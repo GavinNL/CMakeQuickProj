@@ -1,4 +1,22 @@
 #!/bin/bash
+#################################################################
+# Create the Following Folder Structure
+#
+# SrcFolder
+# ├── CMakeLists.txt
+# ├── main.cpp
+# ├── include
+#     └── mylib
+#         └── header.h
+# ├── src
+# └── test
+#     ├── CMakeLists.txt
+#     ├── catch.hpp
+#     ├── main.cpp
+#     └── unit-main.cpp
+
+#################################################################
+
 mkdir -p test src include include/mylib
 
 CATCH_HEADER_URL="https://raw.githubusercontent.com/catchorg/Catch2/master/single_include/catch2/catch.hpp"
@@ -14,20 +32,20 @@ echo 'set(LIBRARY_NAME MYLIB)'                                               >> 
 echo 'add_library( ${LIBRARY_NAME} src/myfile.cpp )'                         >> CMakeLists.txt
 echo 'add_library( ${LIBRARY_NAME}::${LIBRARY_NAME} ALIAS ${LIBRARY_NAME} )' >> CMakeLists.txt
 echo 'target_include_directories( ${LIBRARY_NAME}'                           >> CMakeLists.txt
-echo ' PUBLIC'                                                               >> CMakeLists.txt
-echo ' "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>"'                     >> CMakeLists.txt
+echo '                            PUBLIC'                                              >> CMakeLists.txt
+echo '                               "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>"' >> CMakeLists.txt
 echo ' )'                                                                    >> CMakeLists.txt
 echo 'target_compile_features( ${LIBRARY_NAME}'                              >> CMakeLists.txt
-echo ' PUBLIC'                                                               >> CMakeLists.txt
-echo ' cxx_std_11)'                                                          >> CMakeLists.txt
+echo '                          PUBLIC'                                      >> CMakeLists.txt
+echo '                              cxx_std_17)'                             >> CMakeLists.txt
 echo ''                                                                      >> CMakeLists.txt
 echo 'target_compile_definitions( ${LIBRARY_NAME}'                           >> CMakeLists.txt
-echo ' PUBLIC'                                                               >> CMakeLists.txt
-echo ' TEST_DEFINE)'                                                         >> CMakeLists.txt
+echo '                                PUBLIC'                                >> CMakeLists.txt
+echo '                                TEST_DEFINE)'                          >> CMakeLists.txt
 echo ''                                                                      >> CMakeLists.txt
 echo '# If you create any targets, add them to the following'                >> CMakeLists.txt
 echo '# variable so that the unit tests link to them.'                       >> CMakeLists.txt
-echo 'set(UNIT_TEST_LINK_TARGETS "")'                                        >> CMakeLists.txt
+echo 'set(UNIT_TEST_LINK_TARGETS "${LIBRARY_NAME}::${LIBRARY_NAME}")'        >> CMakeLists.txt
 echo ''                                                                      >> CMakeLists.txt
 echo ''                                                                      >> CMakeLists.txt
 echo 'enable_testing()'                                                      >> CMakeLists.txt
@@ -64,10 +82,10 @@ echo ''                                 >> main.cpp
 
 
 echo '#include "catch.hpp"'             >> test/unit-main.cpp
-echo ''                                 >> test/unit-main.cpp
+echo '#include <mylib/header.h>'        >> test/unit-main.cpp
 echo 'SCENARIO( " Scenario 1" )'        >> test/unit-main.cpp
 echo '{'                                >> test/unit-main.cpp
-echo ' REQUIRE( 1 == 1);'               >> test/unit-main.cpp
+echo ' REQUIRE( func() == 42);'         >> test/unit-main.cpp
 echo '}'                                >> test/unit-main.cpp
 
 
