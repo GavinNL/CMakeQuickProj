@@ -36,9 +36,12 @@ wget -O test/catch.hpp ${CATCH_HEADER_URL}
 echo '# Create a static library for Catch2s main so that we can reduce'                          >> test/CMakeLists.txt
 echo '# compiling time. Each unit test will link to this'                                        >> test/CMakeLists.txt
 echo 'cmake_minimum_required(VERSION 3.13)'                                                      >> test/CMakeLists.txt
-echo 'add_library(catchmain STATIC ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)'                        >> test/CMakeLists.txt
-echo 'target_include_directories(catchmain PUBLIC third_party)'                                  >> test/CMakeLists.txt
-echo 'target_compile_features(catchmain PUBLIC cxx_std_11)'                                      >> test/CMakeLists.txt
+echo ''                                                                                          >> test/CMakeLists.txt
+echo 'add_library(${PROJECT_NAME}-catchmain STATIC ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)'        >> test/CMakeLists.txt
+echo 'target_include_directories(${PROJECT_NAME}-catchmain PUBLIC third_party)'                  >> test/CMakeLists.txt
+echo 'target_compile_features(${PROJECT_NAME}-catchmain PUBLIC cxx_std_11)'                      >> test/CMakeLists.txt
+echo ''                                                                                          >> test/CMakeLists.txt
+echo ''                                                                                          >> test/CMakeLists.txt
 echo ''                                                                                          >> test/CMakeLists.txt
 echo '# Find all files named unit-*.cpp'                                                         >> test/CMakeLists.txt
 echo 'file(GLOB files "unit-*.cpp")'                                                             >> test/CMakeLists.txt
@@ -53,17 +56,20 @@ echo ' string(REGEX REPLACE "unit-([^$]+)" "unit-\\1" exe_name ${file_basename})
 echo ''                                                                                          >> test/CMakeLists.txt
 echo ' message("New File: ${file} Test case: ${testcase} Exe name: ${exe_name}")'                >> test/CMakeLists.txt
 echo ''                                                                                          >> test/CMakeLists.txt
-echo ' add_executable( ${exe_name}'                                                              >> test/CMakeLists.txt
+echo ''                                                                                          >> test/CMakeLists.txt
+echo 'set(UNIT_EXE_NAME ${PROJECT_NAME}-${exe_name} )'                                           >> test/CMakeLists.txt
+echo 'set(UNIT_TEST_NAME test-${PROJECT_NAME}-${exe_name} )'                                     >> test/CMakeLists.txt
+echo ''                                                                                          >> test/CMakeLists.txt
+echo ' add_executable( ${UNIT_EXE_NAME}'                                                         >> test/CMakeLists.txt
 echo ' ${file}'                                                                                  >> test/CMakeLists.txt
 echo ' )'                                                                                        >> test/CMakeLists.txt
-echo ' target_compile_features( ${exe_name}'                                                     >> test/CMakeLists.txt
+echo ' target_compile_features( ${UNIT_EXE_NAME}'                                                >> test/CMakeLists.txt
 echo ' PUBLIC'                                                                                   >> test/CMakeLists.txt
 echo ' cxx_std_11)'                                                                              >> test/CMakeLists.txt
 echo ''                                                                                          >> test/CMakeLists.txt
-echo ' target_include_directories( ${exe_name} PUBLIC ${CMAKE_SOURCE_DIR}/include )'             >> test/CMakeLists.txt
-echo ' target_link_libraries( ${exe_name} PUBLIC catchmain ${UNIT_TEST_LINK_TARGETS})'           >> test/CMakeLists.txt
-echo ' add_test( NAME ${testcase}'                                                               >> test/CMakeLists.txt
-echo ' COMMAND ${exe_name}'                                                                      >> test/CMakeLists.txt
+echo ' target_link_libraries( ${UNIT_EXE_NAME} PUBLIC ${PROJECT_NAME}-catchmain ${UNIT_TEST_LINK_TARGETS})'           >> test/CMakeLists.txt
+echo ' add_test( NAME ${UNIT_TEST_NAME}'                                                               >> test/CMakeLists.txt
+echo ' COMMAND ${UNIT_EXE_NAME}'                                                                      >> test/CMakeLists.txt
 echo ' )'                                                                                        >> test/CMakeLists.txt
 echo 'endforeach()'                                                                              >> test/CMakeLists.txt
 
