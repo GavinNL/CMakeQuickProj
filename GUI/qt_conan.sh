@@ -147,6 +147,7 @@ echo 'int main(int argc, char *argv[])'                                       >>
 echo '{'                                                                      >> main.cpp
 echo '    // Conans qt package needs to know where the fonts are stored'      >> main.cpp
 echo '    setenv("QT_QPA_FONTDIR", "/usr/share/fonts/truetype", false);'      >> main.cpp
+echo '    setenv("QT_XKB_CONFIG_ROOT", "/usr/share/X11/xkb", false);'         >> main.cpp
 echo ''                                                                       >> main.cpp
 echo '    QApplication a(argc, argv);'                                        >> main.cpp
 echo '    MainWindow w;'                                                      >> main.cpp
