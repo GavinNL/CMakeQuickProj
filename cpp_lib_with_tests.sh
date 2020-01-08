@@ -7,6 +7,6 @@ then
  exit 1
 fi
 
-cp -r ${BASE_DIR}/.cpp/hello_world/* .
+cp -r ${BASE_DIR}/.cpp/library_with_unit_tests/* .
 
-rm hello_world.sh
+rm cpp_lib_with_tests.sh

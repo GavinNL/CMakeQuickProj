@@ -1,8 +1,10 @@
 #include <iostream>
+#include <cassert>
 #include <mylib/header.h>
+
 int main(int argc, char ** argv)
 {
- 
- return func();
+    assert( argc > 0);
+    assert( argv );
+    return func();
 }
-

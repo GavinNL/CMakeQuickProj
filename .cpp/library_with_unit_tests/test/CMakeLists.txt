@@ -2,7 +2,7 @@
 # compiling time. Each unit test will link to this
 cmake_minimum_required(VERSION 3.13)
 
-add_library(${PROJECT_NAME}-catchmain STATIC ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+add_library(${PROJECT_NAME}-catchmain STATIC ${CMAKE_CURRENT_SOURCE_DIR}/catch-main.cpp)
 target_include_directories(${PROJECT_NAME}-catchmain PUBLIC third_party)
 target_compile_features(${PROJECT_NAME}-catchmain PUBLIC cxx_std_11)
 

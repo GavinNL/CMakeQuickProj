@@ -23,8 +23,8 @@ option( ${PROJECT_NAME}_ENABLE_WARNINGS "Enable Strict Warnings" TRUE)
 #  If you wish to add more libraries, make a copy of this section and
 # change the values below.
 ################################################################################
-set(libName ${PROJECT_NAME})   # name of the library
-set(srcFiles "src/*" "include/*")          # all the source files for this library
+set(libName              ${PROJECT_NAME})   # name of the library
+set(srcFiles             "src/*" "include/*")          # all the source files for this library
 set(PublicLinkedTargets  "" )
 set(PrivateLinkedTargets "" )
 #-------------------------------------------------------------------------------
@@ -65,11 +65,13 @@ install(
        ${libName}
    LIBRARY  DESTINATION "${CMAKE_INSTALL_LIBDIR}"
    ARCHIVE  DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-   RUNTIME  DESTINATION "${CMAKE_INSTALL_BINDIR}/.."
+   RUNTIME  DESTINATION "${CMAKE_INSTALL_BINDIR}"
    INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
   )
 
-
+  # If you create any targets, add them to the following
+  # variable so that the unit tests link to them.
+LIST(APPEND UNIT_TEST_LINK_TARGETS "${libName}::${libName}")
 ################################################################################
 
 
@@ -77,9 +79,62 @@ install(
 
 
 
-# If you create any targets, add them to the following
-# variable so that the unit tests link to them.
-LIST(APPEND UNIT_TEST_LINK_TARGETS "${PROJECT_NAME}::${PROJECT_NAME}")
+
+
+################################################################################
+# Build the Library.
+#  By default, the library name will be the ${PROJECT_NAME}
+#
+#  If you wish to add more libraries, make a copy of this section and
+# change the values below.
+################################################################################
+set(libName              main)   # name of the library
+set(srcFiles             "main.cpp")          # all the source files for this library
+set(PublicLinkedTargets  "${PROJECT_NAME}::${PROJECT_NAME}" )
+set(PrivateLinkedTargets "" )
+#-------------------------------------------------------------------------------
+file(GLOB_RECURSE srcFiles ${srcFiles} )
+add_executable( ${libName} ${srcFiles} )
+
+target_include_directories( ${libName}
+                            PUBLIC
+                               "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+ )
+
+target_compile_features( ${libName}
+                          PUBLIC
+                              cxx_std_17)
+
+target_compile_definitions( ${libName}
+                                PUBLIC
+                                TEST_DEFINE)
+
+target_link_libraries( ${libName}  PUBLIC  ${PublicLinkedTargets}  )
+target_link_libraries( ${libName}  PRIVATE ${PrivateLinkedTargets} )
+
+if( ${PROJECT_NAME}_ENABLE_COVERAGE )
+    target_link_libraries( ${libName}  PRIVATE  coverage::coverage  )
+endif()
+if( ${PROJECT_NAME}_ENABLE_WARNINGS )
+    target_link_libraries( ${libName}  PRIVATE   warning::all warning::error  )
+endif()
+
+#INSTALL(TARGETS ${libName}
+#    DESTINATION lib
+#)
+
+include(GNUInstallDirs)
+install(
+   TARGETS
+       ${libName}
+   LIBRARY  DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+   ARCHIVE  DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+   RUNTIME  DESTINATION "${CMAKE_INSTALL_BINDIR}"
+   INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+  )
+################################################################################
+
+
 
 
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/test" AND IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test")
