@@ -9,4 +9,4 @@ fi
 
 cp -r ${BASE_DIR}/.cpp/hello_world/* .
 
-rm hello_world.sh
+rm cpp_hello_world.sh

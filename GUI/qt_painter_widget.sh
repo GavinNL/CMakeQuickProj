@@ -7,6 +7,6 @@ then
  exit 1
 fi
 
-cp -r ${BASE_DIR}/.cpp/library_with_unit_tests/* .
+cp -r ${BASE_DIR}/.cpp/qtpainter/* .
 
-rm cpp_lib_with_tests.sh
+rm qt_painter_widget.sh
